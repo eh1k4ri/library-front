@@ -23,8 +23,6 @@ export const useApiConnection = () => {
   return { isConnected, isChecking }
 }
 
-// useDataWithFallback removed (mock data no longer used)
-
 export const useApiData = <T,>(
   fetchFn: () => Promise<T>,
   initial: T
