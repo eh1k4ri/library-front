@@ -1,73 +1,52 @@
-# React + TypeScript + Vite
+# Library Front (Vite + React + TypeScript)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend para o “Library System”. Este app consome a API FastAPI do backend e oferece páginas para Acervo, Leitores, Empréstimos e Reservas.
 
-Currently, two official plugins are available:
+## Pré-requisitos
+- Node.js 18+
+- Backend em execução antes do front (por padrão em http://localhost:8000)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Configuração de Ambiente
+- O front usa a variável `VITE_API_URL` para apontar para a API.
+- Opcional: crie um arquivo `.env.local` dentro de `library-front/` com:
 
-## React Compiler
-
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+VITE_API_URL=http://localhost:8000
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Autenticação: o front utiliza Basic Auth (padrão dev) `admin:password123`. Se alterar no backend, ajuste em `src/services/api.ts`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Instalação e Execução (Dev)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd library-front
+npm install
+npm run dev
+# Abra http://localhost:5173
 ```
+
+## Build e Preview
+
+```bash
+npm run build
+npm run preview
+# Preview padrão em http://localhost:4173
+```
+
+## Páginas Principais
+- Acervo: `/books` — lista e cadastro de livros; status com tradução.
+- Leitores: `/users` — lista e cadastro de usuários; status com tradução.
+- Empréstimos: `/loans` — lista, paginação, registrar empréstimo, devolver.
+- Reservas: `/reservations` — lista, paginação, criar reserva (para livros indisponíveis), completar.
+
+Todas as listagens usam paginação simples com “Anterior / Página / Próxima”. Há um indicador de conexão no topo confirmando acesso ao backend.
+
+## Scripts
+- `npm run dev`: inicia o Vite em modo desenvolvimento.
+- `npm run build`: gera a build de produção.
+- `npm run preview`: serve a build para teste local.
+
+## Solução de Problemas
+- CORS: verifique se o backend habilita CORS para `http://localhost:5173`.
+- 401/403: confira as credenciais (Basic Auth) e variáveis no backend.
+- API URL: ajuste `VITE_API_URL` caso a API não esteja em `localhost:8000`.
