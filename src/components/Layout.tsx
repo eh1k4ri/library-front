@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import type { PropsWithChildren } from 'react'
 import ConnectionStatus from './ConnectionStatus'
-import { BookOpen, Users, BookMarked, Calendar, Settings } from 'lucide-react'
+import { BookOpen, Users, BookMarked, Calendar} from 'lucide-react'
 
 const navItems = [
   { to: '/books', label: 'Acervo', icon: BookOpen },
@@ -21,7 +21,6 @@ function Layout({ children }: PropsWithChildren) {
           </div>
           <div>
             <div className="brand-title">Sistema de Gestão</div>
-            <div className="brand-sub">Library Management System</div>
           </div>
         </div>
 
@@ -57,9 +56,7 @@ function Layout({ children }: PropsWithChildren) {
             </p>
           </div>
           <div className="top-actions">
-            <div className="bubble">
-              <Settings size={20} />
-            </div>
+
             <div className="profile">
               <div className="profile-avatar">
                 <Users size={24} />
