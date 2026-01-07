@@ -17,10 +17,12 @@ function BooksPage() {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [genre, setGenre] = useState('General')
+  const [submitted, setSubmitted] = useState(false)
 
   const onCreate = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!isConnected) return
+    setSubmitted(true)
     const t = title.trim()
     const a = author.trim()
     const g = genre.trim()
@@ -29,6 +31,7 @@ function BooksPage() {
     setTitle('')
     setAuthor('')
     setGenre('General')
+    setSubmitted(false)
     setShowCreate(false)
     reload()
   }
@@ -66,19 +69,28 @@ function BooksPage() {
               onChange={(e) => setTitle(e.target.value)}
               required
             />
+            {submitted && !title.trim() && (
+              <span style={{ gridColumn: '1 / 2', color: '#c62828', fontSize: 12 }}>Campo obrigatório</span>
+            )}
             <input
               placeholder="Autor"
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
               required
             />
+            {submitted && !author.trim() && (
+              <span style={{ gridColumn: '2 / 3', color: '#c62828', fontSize: 12 }}>Campo obrigatório</span>
+            )}
             <input
               placeholder="Gênero"
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
               required
             />
-            <button className="primary" type="submit" disabled={!isConnected || !title.trim() || !author.trim() || !genre.trim()}>Salvar</button>
+            {submitted && !genre.trim() && (
+              <span style={{ gridColumn: '3 / 4', color: '#c62828', fontSize: 12 }}>Campo obrigatório</span>
+            )}
+            <button className="primary" type="submit" disabled={!isConnected}>Salvar</button>
           </form>
         )}
 

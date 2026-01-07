@@ -19,6 +19,7 @@ Autenticação: o front utiliza Basic Auth (padrão dev) `admin:password123`. Se
 ## Instalação e Execução (Dev)
 
 ```bash
+git clone https://github.com/eh1k4ri/library-front.git
 cd library-front
 npm install
 npm run dev

@@ -18,12 +18,13 @@ function ReservationsPage() {
   const [showCreate, setShowCreate] = useState(false)
   const [userKey, setUserKey] = useState('')
   const [bookKey, setBookKey] = useState('')
+  const [submitted, setSubmitted] = useState(false)
 
   const activeUsers = (usersList as any[]).filter(
     (u) => (u as any).status?.enumerator === 'active'
   )
-  const unavailableBooks = (booksList as any[]).filter(
-    (b) => (b as any).status?.enumerator !== 'available'
+  const loanedBooks = (booksList as any[]).filter(
+    (b) => (b as any).status?.enumerator === 'loaned'
   )
 
   useEffect(() => {
@@ -41,12 +42,14 @@ function ReservationsPage() {
   const onCreate = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!isConnected) return
+    setSubmitted(true)
     const u = userKey.trim()
     const b = bookKey.trim()
     if (!u || !b) return
     await apiClient.createReservation({ user_key: u, book_key: b })
     setUserKey('')
     setBookKey('')
+    setSubmitted(false)
     setShowCreate(false)
     reload()
   }
@@ -63,7 +66,7 @@ function ReservationsPage() {
         <div className="card__header">
           <div>
             <p className="eyebrow">Fila de Espera</p>
-            <h3>Reservas Pendentes</h3>
+            <h3>Reservas</h3>
           </div>
           <button className="primary" onClick={() => setShowCreate((v) => !v)} disabled={!isConnected}>
             <Plus size={18} />
@@ -87,24 +90,30 @@ function ReservationsPage() {
                 </option>
               ))}
             </select>
+            {submitted && !userKey.trim() && (
+              <span style={{ gridColumn: '1 / 2', color: '#c62828', fontSize: 12 }}>Campo obrigatório</span>
+            )}
             <select
               value={bookKey}
               onChange={(e) => setBookKey(e.target.value)}
               required
             >
               <option value="" disabled>
-                Selecione um livro indisponível
+                Selecione um livro emprestado
               </option>
-              {unavailableBooks.map((b: any) => (
+              {loanedBooks.map((b: any) => (
                 <option key={b.book_key || b.id} value={b.book_key}>
                   {b.title} — {b.author}
                 </option>
               ))}
             </select>
+            {submitted && !bookKey.trim() && (
+              <span style={{ gridColumn: '2 / 3', color: '#c62828', fontSize: 12 }}>Campo obrigatório</span>
+            )}
             <button
               className="primary"
               type="submit"
-              disabled={!isConnected || !userKey.trim() || !bookKey.trim() || activeUsers.length === 0 || unavailableBooks.length === 0}
+              disabled={!isConnected || activeUsers.length === 0 || loanedBooks.length === 0}
             >
               Salvar
             </button>

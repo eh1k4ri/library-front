@@ -15,16 +15,21 @@ function UsersPage() {
   const [showCreate, setShowCreate] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const isValidEmail = (value: string) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value)
+  const isFormValid = !!name.trim() && !!email.trim() && isValidEmail(email.trim())
 
   const onCreate = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!isConnected) return
+    setSubmitted(true)
     const n = name.trim()
     const m = email.trim()
-    if (!n || !m) return
+    if (!n || !m || !isValidEmail(m)) return
     await apiClient.createUser({ name: n, email: m })
     setName('')
     setEmail('')
+    setSubmitted(false)
     setShowCreate(false)
     reload()
   }
@@ -61,6 +66,9 @@ function UsersPage() {
               onChange={(e) => setName(e.target.value)}
               required
             />
+            {submitted && !name.trim() && (
+              <span style={{ gridColumn: '1 / 2', color: '#c62828', fontSize: 12 }}>Campo obrigatório</span>
+            )}
             <input
               placeholder="Email"
               type="email"
@@ -68,7 +76,13 @@ function UsersPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <button className="primary" type="submit" disabled={!isConnected || !name.trim() || !email.trim()}>Salvar</button>
+            {submitted && !email.trim() && (
+              <span style={{ gridColumn: '2 / 3', color: '#c62828', fontSize: 12 }}>Campo obrigatório</span>
+            )}
+            {submitted && !!email.trim() && !isValidEmail(email.trim()) && (
+              <span style={{ gridColumn: '2 / 3', color: '#c62828', fontSize: 12 }}>Email inválido</span>
+            )}
+            <button className="primary" type="submit" disabled={!isConnected}>Salvar</button>
           </form>
         )}
 
